@@ -46,7 +46,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:      port,
-		Handler:   mw.SecurityHedders((mw.Cors(mux))),
+		Handler:   mw.Compression(mw.SecurityHedders((mw.Cors(mux)))),
 		TLSConfig: tlsConfig,
 	}
 
