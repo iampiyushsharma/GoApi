@@ -1,8 +1,10 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/http"
+	"restapi/inrernal/api/middlewares"
 )
 
 func teachersHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,12 +33,26 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	port := "localhost:8080"
 
-	http.HandleFunc("/", rootHandler)
-	http.HandleFunc("/teachers", teachersHandler)
+	cert := "cert.pem"
+	key := "key.pem"
 
-	fmt.Println("server is running on port", port)
-	err := http.ListenAndServe(port, nil)
+	mux := http.NewServeMux()
+	tlsConfig := &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
+
+	mux.HandleFunc("/", rootHandler)
+	mux.HandleFunc("/teachers", teachersHandler)
+
+	server := &http.Server{
+		Addr:      port,
+		Handler:   middlewares.SecurityMiddleware(mux),
+		TLSConfig: tlsConfig,
+	}
+
+	fmt.Println("server is running on https://localhost:8080")
+	err := server.ListenAndServeTLS(cert, key)
 	if err != nil {
-		fmt.Println("Error is server starting err: ", err)
+		fmt.Println("Error in server starting err: ", err)
 	}
 }
