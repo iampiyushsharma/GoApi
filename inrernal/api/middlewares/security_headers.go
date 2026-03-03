@@ -2,7 +2,7 @@ package middlewares
 
 import "net/http"
 
-func SecurityMiddleware(next http.Handler) http.Handler {
+func SecurityHedders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-DNS-Prefetch-Control", "off")
 

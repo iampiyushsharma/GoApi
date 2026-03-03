@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
-	"restapi/inrernal/api/middlewares"
+	mw "restapi/inrernal/api/middlewares"
 )
 
 func teachersHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +46,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:      port,
-		Handler:   middlewares.SecurityMiddleware(mux),
+		Handler:   mw.SecurityHedders((mw.Cors(mux))),
 		TLSConfig: tlsConfig,
 	}
 
